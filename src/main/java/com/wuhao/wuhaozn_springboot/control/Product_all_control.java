@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,25 +34,34 @@ public class Product_all_control {
     @ResponseBody
     public StateUtil insert_product(product_bean productBean){
         if(!ObjectUtils.isEmpty(productBean)) {
-            int code = productService.insert_product(productBean);
-            int index=productBean.getProduct_image().lastIndexOf("/");
-            Image_bean image_bean =new Image_bean();
-            image_bean.setImage_name(productBean.getProduct_image().substring(index+1));
-            image_bean.setImage_type("1");
-            image_bean.setImage_to("1");
-            image_bean.setImage_to_id(productBean.getId());
-            imageService.insert_image(image_bean);
-            if(code==1){
-
-               return new StateUtil("添加成功！",200);
+            int code = -1;
+            boolean isUpdate = false;
+            if (productBean.getId() != 0){
+                code = productService.updateProductById(productBean);
+                isUpdate = true;
+            }else {
+                code = productService.insert_product(productBean);
+            }
+            if(!StringUtils.isEmpty(productBean.getProduct_image())){
+                int index=productBean.getProduct_image().lastIndexOf("/");
+                Image_bean image_bean =new Image_bean();
+                image_bean.setImage_name(productBean.getProduct_image().substring(index+1));
+                image_bean.setImage_type("1");
+                image_bean.setImage_to("1");
+                image_bean.setImage_to_id(productBean.getId());
+                if(isUpdate){
+                    imageService.insert_image(image_bean);
+                }else {
+//                imageService.update_image()
+                }
             }
 
+            if(code==1){
+               return new StateUtil("添加成功！",200);
+            }
         }else{
-
             return new StateUtil("添加失败！",400);
         }
-
-
         return new StateUtil("添加失败！",400);
     }
 

@@ -80,6 +80,17 @@ public class Table_show_control {
         return new StateUtil("失败",400);
     }
 
+    @GetMapping("/update_id")
+    public String updateProduct(@RequestParam("id") int id, Model model){
+        product_bean productBean = productService.selectById(id);
+        if(productBean == null){
+            productBean = new product_bean();
+
+        }
+        model.addAttribute("productBean",productBean);
+        return "page/upload";
+    }
+
     @PostMapping("/updateimage")
     @ResponseBody
     public  StateUtil updateimage(String product_image,int id){

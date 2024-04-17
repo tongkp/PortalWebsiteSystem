@@ -24,6 +24,11 @@ public class product_service  implements product_ser{
        return code;
     }
 
+    public int updateProductById(product_bean productBean) {
+        int i = productMapper.updateById(productBean);
+        return i;
+    }
+
     @Override
     public IPage<product_bean> select_product(Page page) {
 
@@ -54,6 +59,11 @@ public class product_service  implements product_ser{
     public product_bean select_detailpage(String product_name) {
 
         return productMapper.select_detailpage(product_name);
+    }
+
+    @Override
+    public product_bean selectById(int id) {
+        return productMapper.selectById(id);
     }
 
     @Override

@@ -15,5 +15,6 @@ public interface product_ser {
     public boolean delete_id (int id);
     public boolean updateimage(String product_image,int id);
     public product_bean select_detailpage(String product_name);
+    public product_bean selectById(int id);
     public List<product_bean> select_product();
 }

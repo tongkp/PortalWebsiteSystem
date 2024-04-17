@@ -6,35 +6,39 @@
     <link rel="stylesheet" th:href="@{/layuimini/lib/layui-v2.5.5/css/layui.css}" media="all">
     <link rel="stylesheet" th:href="@{/layuimini/lib/jq-module/zyupload/zyupload-1.0.0.min.css}" media="all">
     <link rel="stylesheet" th:href="@{/layuimini/css/public.css}" media="all">
+    <link th:include="common :: common_head">
 </head>
 <body>
 <div class="layuimini-container">
    <div class="layuimini-main">
-       <form class="layui-form" action="">
+       <form class="layui-form" action="" th:object="${productBean}">
+           <input name="id" id="id" hidden="hidden" th:field="*{id}"/>
         <div class="layui-form-item">
             <label class="layui-form-label">标题：</label>
             <div class="layui-input-block">
-                <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" th:field="*{product_name}" autocomplete="off" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label">类型</label>
             <div class="layui-input-block">
-                <input type="checkbox" value="1" name="product" title="产品" lay-skin="primary" checked>
-                <input type="checkbox" value="2" name="patents" title="专利" lay-skin="primary">
-                <input type="checkbox" value="3" name="soultion" title="解决方案" lay-skin="primary">
-                <input type="checkbox" value="4" name="case" title="成功案例" lay-skin="primary">
+                <input type="checkbox" value="1" name="pType" title="产品" lay-skin="primary" checked>
+                <input type="checkbox" value="2" name="pType" title="专利" lay-skin="primary">
+                <input type="checkbox" value="3" name="pType" title="解决方案" lay-skin="primary">
+                <input type="checkbox" value="4" name="pType" title="成功案例" lay-skin="primary">
 
             </div>
         </div>
            <div class="layui-form-item">
                <label class="layui-form-label">上传图片：</label>
+                   <input id="span_img_path" type="hidden" th:field="*{product_image}"></input>
+
            <div class="layui-upload-drag" id="test10">
                <i class="layui-icon"></i>
                <p>点击上传预览图</p>
                <div class="layui-hide" id="uploadDemoView">
                    <hr>
-                   <img src="" alt="上传成功后渲染" style="max-width: 196px">
+                   <img th:src="*{product_image}" alt="上传成功后渲染" style="max-width: 196px">
                </div>
            </div>
        </div>
@@ -42,13 +46,13 @@
            <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">内容简介：</label>
             <div class="layui-input-block">
-                <textarea name="desc" placeholder="请输入内容简介" class="layui-textarea"></textarea>
+                <textarea name="desc" placeholder="请输入内容简介" th:field="*{product_brief}" class="layui-textarea"></textarea>
             </div>
         </div>
            <div class="layui-form-item">
                <label class="layui-form-label">内容编辑：</label>
                <div class="layui-input-block">
-                   <textarea id="edit" lay-verify="content0" style="display: none;"></textarea>
+                   <textarea id="edit" lay-verify="content0" th:field="*{product_content}" style="display: none;"></textarea>
                </div>
            </div>
 
@@ -70,6 +74,12 @@
         var upload = layui.upload;
         var layedit = layui.layedit;
         var num=10
+        var origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+
+        var productBean = '[[${productBean}]]' || {};
+        console.log("初始化对象："+productBean.product_);
+
+        var initialImageUrl = $("#span_img_path").val();
         upload.render({
             elem: '#test10'
             ,url: '/upload_image' //改成您自己的上传接口
@@ -77,6 +87,7 @@
                 $('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', '/layuimini/image_out/'+res.imagefile_path);
             }
         });
+        $('#uploadDemoView').removeClass('layui-hide').find('img').attr('src', initialImageUrl);
 
         layedit.set({
             uploadImage: {
@@ -84,52 +95,71 @@
                 ,type: 'post' //默认post
             }
         });
-        var index=layedit.build('edit'); //建立编辑器
+        var editIdx=layedit.build('edit'); //建立编辑器
 
         form.verify({
             content0:function (value) {
-                layedit.sync(index)
+                layedit.sync(editIdx)
             }
 
         })
-
-
-
-
-
         form.on("submit(tijiao)",function (datas) {
-            var text = layedit.getContent(index)
+            var text = layedit.getContent(editIdx)
             var src=$('#uploadDemoView').find("img").attr("src");
+            console.log("准备提交："+JSON.stringify(datas.field));
+            var data=datas.field;
+            switch (data.pType) {
+                case 1:
+                    window.productHandler(data);
+                    break
+                case 2:
 
-            data=datas.field;
+                    break;
+                case 3:
+
+                    break;
+                case 4:
+
+                    break;
+            }
             if(data.product==1){
+                console.log("data.product:", data.product);
                 $.ajax({
                     url :"/content/product",
                     type: "post",
                     dataType:"json",
+                    // contentType: 'application/json',
                     data:{
-                        product_name: data.title,
-                        product_brief: data.desc,
+                        id:data.id,
+                        product_name: data.product_name,
+                        product_brief: data.product_brief,
                         product_image: src,
                         product_content: text
-
                     },
-                    success :function (dat) {
-                    if( dat.statecode == 200 ){
-                        if(num==0){
-                        layer.msg('添加成功', {
-                            icon: 1,
-                            time: 1000 //2秒关闭（如果不配置，默认是3秒）
-                        }, function(){
-                            history.go(0);
-                        })
-                        num=100;
-                    }}
+                    success: function(msg) {
+                        //关闭弹窗
+                        parent.layer.closeAll();
+                        //通知列表面刷新页面
+                        window.parent.postMessage({message:'reloadTable'}, origin); // 发送请求给父页面获取 layer 索引
+                    },error: function(jqXHR, textStatus, errorThrown) {
+                        // 当请求失败时调用的函数
+                        // jqXHR参数是jQuery XMLHttpRequest对象
+                        // textStatus参数可以是"timeout", "error", "abort", 或 "parsererror"
+                        // errorThrown参数是实际的异常对象
+                        console.error("请求失败:", textStatus, errorThrown);
+                    },
+                    beforeSend: function(jqXHR, settings) {
+                        // 在发送请求之前调用的函数
+                        // 可以用于设置请求头，或者显示加载指示器等
+                        console.log("正在发送请求...");
+                    },
+                    complete: function(jqXHR, textStatus) {
+                        // 请求完成后调用的函数，无论成功或失败
+                        console.log("请求完成，状态是:", textStatus);
                     }
                 })
-            }
-
-           if(data.patents==2){
+            }else if(data.patents==2){
+                console.log("data.patents:", data.patents);
                $.ajax({
                    url :"/content/patents",
                    type: "post",
@@ -154,9 +184,8 @@
 
                        }
                    }})
-           }
-
-            if(data.soultion==3){
+           }else if(data.soultion==3){
+                console.log("data.soultion:", data.soultion);
                 $.ajax({
                     url :"/content/solution",
                     type: "post",
@@ -181,10 +210,8 @@
 
                         }
                     }})
-            }
-
-
-            if(data.case==4){
+            }else if(data.case==4){
+                console.log("data.case:", data.case);
                 $.ajax({
                     url :"/content/case",
                     type: "post",
@@ -210,8 +237,124 @@
                         }
                     }})
             }
-
         })
+
+        window.productHandler = function (data){
+            console.log("data.product:", data.product);
+            $.ajax({
+                url :"/content/product",
+                type: "post",
+                dataType:"json",
+                // contentType: 'application/json',
+                data:{
+                    id:data.id,
+                    product_name: data.product_name,
+                    product_brief: data.product_brief,
+                    product_image: src,
+                    product_content: text
+                },
+                success: function(msg) {
+                    //关闭弹窗
+                    parent.layer.closeAll();
+                    //通知列表面刷新页面
+                    window.parent.postMessage({message:'reloadTable'}, origin); // 发送请求给父页面获取 layer 索引
+                },error: function(jqXHR, textStatus, errorThrown) {
+                    // 当请求失败时调用的函数
+                    // jqXHR参数是jQuery XMLHttpRequest对象
+                    // textStatus参数可以是"timeout", "error", "abort", 或 "parsererror"
+                    // errorThrown参数是实际的异常对象
+                    console.error("请求失败:", textStatus, errorThrown);
+                },
+                beforeSend: function(jqXHR, settings) {
+                    // 在发送请求之前调用的函数
+                    // 可以用于设置请求头，或者显示加载指示器等
+                    console.log("正在发送请求...");
+                },
+                complete: function(jqXHR, textStatus) {
+                    // 请求完成后调用的函数，无论成功或失败
+                    console.log("请求完成，状态是:", textStatus);
+                }
+            })
+        }
+
+        window.patentsHandler = function (data) {
+            $.ajax({
+                url :"/content/patents",
+                type: "post",
+                dataType:"json",
+                data:{
+                    patents_name: data.title,
+                    patents_brief: data.desc,
+                    patents_image: src,
+                    patents_content: text
+                },
+                success:function (dat) {
+                    if(dat.statecode==200){
+                        if(num==0){
+                            layer.msg('添加成功', {
+                                icon: 1,
+                                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function(){
+                                history.go(0);
+                            })
+                            num=100;
+                        }
+
+                    }
+                }})
+        }
+        window.soultionHandler = function (data) {
+            $.ajax({
+                url :"/content/solution",
+                type: "post",
+                dataType:"json",
+                data:{
+                    solution_name: data.title,
+                    solution_brief: data.desc,
+                    solution_image: src,
+                    solution_content: text},
+                success:function (dat) {
+                    if(dat.statecode==200){
+                        if(num==0){
+                            layer.msg('添加成功', {
+                                icon: 1,
+                                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function(){
+
+                                history.go(0);
+                            })
+                            num=100;
+                        }
+
+                    }
+                }})
+        }
+        window.caseHandler = function (data) {
+            $.ajax({
+                url :"/content/case",
+                type: "post",
+                dataType:"json",
+                data:{
+                    case_name: data.title,
+                    case_brief: data.desc,
+                    case_image: src,
+                    case_content: text
+                },
+                success:function (dat) {
+                    if(dat.statecode==200){
+                        if(num==0){
+                            layer.msg('添加成功', {
+                                icon: 1,
+                                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function(){
+
+                                history.go(0);
+                            })
+                            num=100;
+                        }
+                    }
+                }})
+        }
     });
 </script>
 </body>

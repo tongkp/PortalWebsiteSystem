@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface product_mapper extends BaseMapper<product_bean> {
 
-        @Insert("insert into product_table(product_name,product_brief,product_image,product_content) values (#{product_name},#{product_brief},#{product_image},#{product_content})")
+        @Insert("insert into product_table(product_name,product_brief,product_image,product_content,p_type) values (#{product_name},#{product_brief},#{product_image},#{product_content},#{pType})")
         @Options(useGeneratedKeys = true,keyColumn = "id",keyProperty = "id")
         public int insert_product(product_bean product);
 
@@ -31,6 +31,13 @@ public interface product_mapper extends BaseMapper<product_bean> {
         @Select("select * from product_table where product_name=#{product_name}")
         public product_bean select_detailpage(String product_name);
 
+        //详情页
+        @Select("select * from product_table where id=#{id}")
+        public product_bean selectById(int id);
+
         @Select("select * from product_table")
         public List<product_bean> select_product();
+
+        @Update("UPDATE product_table SET product_name = #{product_name}, product_brief = #{product_brief}, product_image = #{product_image}, product_content = #{product_content}, p_type=#{pType} WHERE id = #{id}")
+        int updateById(product_bean entity);
 }

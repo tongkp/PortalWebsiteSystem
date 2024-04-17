@@ -19,5 +19,9 @@ public class product_bean {
     String product_brief;
     String product_image;
     String product_content;
+    /**
+     * 类型 1产品，2专利，3解决方案，4成功案例
+     */
+    int pType;
 
 }

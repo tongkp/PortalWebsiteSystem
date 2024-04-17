@@ -56,6 +56,8 @@
             form = layui.form,
             table = layui.table;
             var codewql;
+        var editIndex = -1;
+        var origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
         table.render({
             elem: '#currentTableId',
             url: '/product/product_show_table',
@@ -102,7 +104,6 @@
          * toolbar监听事件
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
-
             if (obj.event === 'add') {  // 监听添加操作
                 var index = layer.open({
                     title: '添加产品',
@@ -158,12 +159,11 @@
         });
 
         table.on('tool(currentTableFilter)', function (obj) {
-
             var data = obj.data;
-            var url_="/upload"
+            console.log(JSON.stringify(data));
+            var url_="/product/update_id?id="+data.id;
             if (obj.event === 'edit') {
-
-                var index = layer.open({
+                editIndex = layer.open({
                     title: '编辑产品',
                     type: 2,
                     shade: 0.2,
@@ -171,9 +171,12 @@
                     shadeClose: true,
                     area: ['75%', '75%'],
                     content: url_,
+                    success:function (layero, editIdx) {
+                        // localStorage.setItem('productData', JSON.stringify(data));
+                    }
                 });
                 $(window).on("resize", function () {
-                    layer.full(index);
+                    layer.full(editIdx);
                 });
                 return false;
             } else if (obj.event === 'delete') {
@@ -193,6 +196,12 @@
             }
         });
 
+        window.addEventListener('message', function(event) {
+            if (event.origin !== origin) return; // 出于安全考虑，检查消息来源
+            if (event.data.message === 'reloadTable') {
+                table.reload('currentTableId');
+            }
+        }, false);
     });
 </script>
 
