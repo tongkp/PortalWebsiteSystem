@@ -34,7 +34,7 @@
                      <a class="nav-link" th:href="@{/home}">首页</a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link" th:href="@{/product/products}">产品介绍</a>
+                     <a class="nav-link" th:href="@{/services}">产品介绍</a>
                   </li>
                   <li class="nav-item">
                      <a class="nav-link " th:href="@{/solution}">解决方案</a>
@@ -66,7 +66,7 @@
                   <a class="nav-link" th:href="@{/home}">首页</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link" th:href="@{/product/products(proType=1)}">产品介绍</a>
+                  <a class="nav-link" th:href="@{/services}">产品介绍</a>
                </li>
                <li class="nav-item">
                   <a class="nav-link " th:href="@{/solution}">解决方案</a>
@@ -123,11 +123,8 @@
       <div class="services_section_2">
          <div class="row">
             <div class="col-md-4" th:each="cp,item :${session.cp}">
-               <div><img style="width: 400px;height: 400px" th:src="@{${cp.productImg}}" class="services_img"></div>
-               <div class="btn_main"><a th:href="@{/product/productDetail/{id}(id=${cp.id})}">产品详情</a></div>
-
-               <!--<a th:href="@{/product/productDetail/{id}(id=${prod.id})}" th:attr="dataId=${prod.id}"
-                  class="a_detailpage">了解产品</a>-->
+               <div><img style="width: 400px;height: 400px" th:src="@{${cp.product_image}}" class="services_img"></div>
+               <div class="btn_main"><a th:href="@{/services}">产品详情</a></div>
             </div>
          </div>
       </div>
@@ -169,16 +166,16 @@
          <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
 
-               <li th:each="intro,item :${session.slideshowInfoList}" th:attr="data-slide-to=${item.index}" data-target="#carouselExampleIndicators" class=""th:classappend="${item.index==0} ? 'active' : ''"></li>
+               <li th:each="intro,item :${session.company_list}" th:attr="data-slide-to=${item.index}" data-target="#carouselExampleIndicators" class=""th:classappend="${item.index==0} ? 'active' : ''"></li>
             </ol>
             <div class="carousel-inner" >
-               <div th:each="intros,items :${session.slideshowInfoList}" class="carousel-item "th:classappend="${items.index==0}?'active':''">
+               <div th:each="intros,items :${session.company_list}" class="carousel-item "th:classappend="${items.index==0}?'active':''">
                   <div  class="client_main">
                      <div class="box_left">
-                        <p class="lorem_text" th:text="${intros.imageInformation}">内容</p>
+                        <p class="lorem_text" th:text="${intros.image_information}">内容</p>
                      </div>
                      <div class="box_right">
-                        <img  style="width: 700px;height: 300px" th:src="@{${intros.imagePathUrl}}"/>
+                        <img  style="width: 700px;height: 300px" th:src="@{${intros.image_path_url}}"/>
                      </div>
                   </div>
                </div>

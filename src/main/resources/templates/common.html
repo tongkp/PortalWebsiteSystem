@@ -18,7 +18,7 @@
     <div class="header_main">
         <div class="mobile_menu">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="logo_mobile"><a th:href="@{/index}"><img src="images/logo.png"></a></div>
+<!--                <div class="logo_mobile"><a th:href="@{/index}"><img src="images/logo.jpg"></a></div>-->
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -29,16 +29,16 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/services}">产品介绍</a>
+                            <a class="nav-link" th:href="@{/product/products(proType=1)}">产品介绍</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " th:href="@{/blog}">解决方案</a>
+                            <a class="nav-link " th:href="@{/product/products(proType=3)}">解决方案</a>
                         </li>
 <!--                        <li class="nav-item">-->
 <!--                            <a class="nav-link " th:href="@{/blog}">专利荣誉</a>-->
 <!--                        </li>-->
                         <li class="nav-item">
-                            <a class="nav-link" th:href="@{/about}">成功案例</a>
+                            <a class="nav-link" th:href="@{/product/products(proType=4)}">成功案例</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " th:href="@{/blog}">关于我们</a>
@@ -55,10 +55,10 @@
             <div class="menu_main">
                 <ul>
                     <li class="active"><a th:href="@{/home}">首页</a></li>
-                    <li><a th:href="@{/services}">产品介绍</a></li>
-                    <li><a th:href="@{/solution}">解决方案</a></li>
+                    <li><a th:href="@{/product/products(proType=1)}">产品介绍</a></li>
+                    <li><a th:href="@{/product/products(proType=3)}">解决方案</a></li>
 <!--                    <li><a th:href="@{/blog}">专利荣誉</a></li>-->
-                    <li><a th:href="@{/successful}">成功案例</a></li>
+                    <li><a th:href="@{/product/products(proType=4)}">成功案例</a></li>
                     <li><a th:href="@{/about}">关于我们</a></li>
                     <li><a th:href="@{/login}">系统</a></li>
                 </ul>
@@ -74,9 +74,9 @@
             <div class="subscribe_bt"><a href="#">提交</a></div>
         </div>
         <div class="location_main">
-            <div class="call_text"><img src="images/call-icon.png"><a href="#" th:text="'电话：'+${session.company_phone}"></a>
+            <div class="call_text"><img src="../images/call-icon.png"><a href="#" th:text="'电话：'+${session.company_phone}"></a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <img src="images/mail-icon.png"><a href="#" >邮箱：tongkp@126.com</a>
+                <img src="../images/mail-icon.png"><a href="#" >邮箱：tongkp@126.com</a>
             </div>
 
 
@@ -88,15 +88,15 @@
 </div>
 
 <div th:fragment="common_src">
-    <script th:src="@{js/jquery.min.js}"></script>
-    <script th:src="@{js/popper.min.js}"></script>
-    <script th:src="@{js/bootstrap.bundle.min.js}"></script>
-    <script th:src="@{js/jquery-3.0.0.min.js}"></script>
-    <script th:src="@{js/plugin.js}"></script>
-    <script th:src="@{js/jquery.mCustomScrollbar.concat.min.js}"></script>
-    <script th:src="@{js/custom.js}"></script>
+    <script th:src="@{../js/jquery.min.js}"></script>
+    <script th:src="@{../js/popper.min.js}"></script>
+    <script th:src="@{../js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{../js/jquery-3.0.0.min.js}"></script>
+    <script th:src="@{../js/plugin.js}"></script>
+    <script th:src="@{../js/jquery.mCustomScrollbar.concat.min.js}"></script>
+    <script th:src="@{../js/custom.js}"></script>
 <!--    <script th:src="@{js/owl.carousel.js}"></script>-->
-    <script th:src="@{js/jquery.fancybox.min.js}"></script>
+    <script th:src="@{../js/jquery.fancybox.min.js}"></script>
 </div>
 
 
