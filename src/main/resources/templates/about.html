@@ -70,7 +70,7 @@
    //创建地图函数：
    function createMap(){
       var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
-      var point = new BMap.Point(114.6638,38.041897);//定义一个中心点坐标
+      var point = new BMap.Point(114.366981,30.579549);//定义一个中心点坐标  114.368501|30.578109
       map.centerAndZoom(point,18);//设定地图的中心点和坐标并将地图显示在地图容器中
       window.map = map;//将map变量存储在全局
    }
@@ -96,8 +96,8 @@
       map.addControl(ctrl_sca);
    }
 
-   //标注点数组
-   var markerArr = [{title:"光影空间",content:"武汉市洪山区东湖景园A区",point:"114.368501|30.578109",isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
+   //标注点数组  https://j.map.baidu.com/76/QHii
+   var markerArr = [{title:"光影空间",content:"武汉市洪山区东湖景园A区",point:"114.366981|30.579549",isOpen:0,icon:{w:21,h:21,l:0,t:0,x:6,lb:5}}
    ];
    //创建marker
    function addMarker(){

@@ -33,9 +33,19 @@ public class ProductInfo {
      */
     String productContent;
     /**
-     * 类型 1产品，2专利，3解决方案，4成功案例
+     * 类型 1产品，2专利，3解决方案，4成功案例，5banner
      */
     Integer proType;
+
+    /**
+     * 排序
+     */
+    Integer proSort;
+
+    /**
+     * 0禁用，1启用，默认启用
+     */
+    Integer proState;
 
 }
 

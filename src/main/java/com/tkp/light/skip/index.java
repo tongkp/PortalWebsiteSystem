@@ -1,6 +1,7 @@
 package com.tkp.light.skip;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tkp.light.bean.CompanyInfo;
 import com.tkp.light.bean.PatentsEntity;
 import com.tkp.light.bean.ProductInfo;
@@ -43,45 +44,41 @@ public class index {
         session.setAttribute("company_content",s.getCompanyContent());
         session.setAttribute("company_image",s.getCompanyImage());
 
-        QueryWrapper<SlideshowInfo> slideshowEntityQueryWrapper = new QueryWrapper<>();
-        slideshowEntityQueryWrapper.getSqlFirst();
-        List<SlideshowInfo> slideshowInfoList = slideshowService.list(slideshowEntityQueryWrapper);
+        List<SlideshowInfo> slideshowInfoList = slideshowService.list();
         session.setAttribute("slideshowInfoList",slideshowInfoList);
 
-        Random random = new Random();
-        List<ProductInfo> list1=productInfoService.list();
-        if(list1.size()!=0) {
-            List<ProductInfo> list2 = new ArrayList<>();
 
-            for (int i = 1; i <= 3; i++) {
-                String index = "cp" + i;
-                list2.add(list1.get(random.nextInt(list1.size())));
-            }
-            session.setAttribute("cp", list2);
+        QueryWrapper<ProductInfo> productInfoQueryWrapper=new QueryWrapper<ProductInfo>();
+        productInfoQueryWrapper.eq("pro_state", 1);
+        productInfoQueryWrapper.orderByDesc("pro_sort");
+        productInfoQueryWrapper.last("limit 3");
+
+        //查询排序值前3的产品列表
+        productInfoQueryWrapper.eq("pro_type", 1);
+        List<ProductInfo> productInfoList = productInfoService.list(productInfoQueryWrapper);
+        if(!productInfoList.isEmpty()){
+            session.setAttribute("cp",productInfoList);
         }else {
             ProductInfo wran =new ProductInfo();
             wran.setProductImg("/layuimini/images/400.jpg");
-            list1.add(wran);
-            session.setAttribute("cp",list1);
+            productInfoList =new ArrayList<>();
+            productInfoList.add(wran);
+            session.setAttribute("cp",productInfoList);
         }
-        QueryWrapper<PatentsEntity> patentsEntityQueryWrapper = new QueryWrapper<>();
-        List<PatentsEntity> list3=patentsService.list(patentsEntityQueryWrapper);
-        if(!list3.isEmpty()) {
-            List<PatentsEntity> list4 = new ArrayList<PatentsEntity>();
-            for (int i = 1; i <= 2; i++) {
-                list4.add(list3.get(random.nextInt(list3.size())));
-            }
-            session.setAttribute("zl", list4);
 
+        //查询banner列表
+        QueryWrapper<ProductInfo> bannerQueryWrapper=new QueryWrapper<ProductInfo>();
+        bannerQueryWrapper.eq("pro_state", 1);
+        bannerQueryWrapper.orderByDesc("pro_sort");
+        bannerQueryWrapper.last("limit 3");
+        bannerQueryWrapper.eq("pro_type", 5);
+        List<ProductInfo> bannerList = productInfoService.list(bannerQueryWrapper);
+        if(!bannerList.isEmpty()){
+            session.setAttribute("bannerList",bannerList);
         }else {
-            PatentsEntity warn= new PatentsEntity();
-            warn.setPatentsName("没有添加任何专利");
-            warn.setPatentsBrief("没有添加任何专利");
-            warn.setPatentsImage("/layuimini/images/400.jpg");
-            list3.add(warn);
-            session.setAttribute("zl", list3);
+            bannerList =new ArrayList<>();
+            session.setAttribute("bannerList",bannerList);
         }
-
         return "index";
     }
 
